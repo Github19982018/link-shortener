@@ -5,19 +5,21 @@ import './App.css'
 import axios from 'axios';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
-  const [isError, setisError] = useState(false);
+  const [status,setStatus] = useState('active')
   const inputRef = useRef(null);
 
-   const shortenUrl = "https://api-ssl.bitly.com/v4/shorten";
+  let isError = status == 'error';
+  let isLoading = status == 'loading'
+
+  const shortenUrl = "https://api-ssl.bitly.com/v4/shorten";
   
 
 
   const shortenHandler = async() => {
-      setIsLoading(true);
+      setStatus('loading');
 
-      const token = "6c856e73f1d23b2e896ca069ccc0c2112c1b47b5";
+      const token = import.meta.env.VITE_TOKEN;
 
       try {
         const response = await axios.post(
@@ -30,14 +32,12 @@ function App() {
             },
           }
         )
-        setIsLoading(false);
-        setisError(false);
+        setStatus('active');
         console.log(response.data.link)
         setData(response.data.link);
       }
       catch(error) {
-        setIsLoading(false);
-        setisError(true);
+        setStatus('error')
       }
       
     }
